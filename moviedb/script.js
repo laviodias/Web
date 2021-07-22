@@ -1,4 +1,5 @@
 let page = 1;
+let totalPages;
 let currentPage = 1;
 let prevLayout;
 let isClicked = false;
@@ -22,8 +23,13 @@ document.getElementById("btn-page").addEventListener("click", () => {
       apiCall();
 
   }else{
-    currentPage = document.getElementById("pageNumber").value;
-    searchCall()
+    if(document.getElementById("pageNumber").value  < 1 || document.getElementById("pageNumber").value > 24){
+      window.alert(`Digite um valor entre 1 e ${totalPages}`)
+    }
+    else{
+      currentPage = document.getElementById("pageNumber").value;
+      searchCall()
+    }
   }
 })
 
@@ -67,8 +73,8 @@ function searchCall(){
           listMovies(movie)
         });
         
-        let pages = data['total_pages'];
-        document.getElementById('txtPages').innerHTML = `Página ${data['page']} de ${pages}`
+        totalPages = data['total_pages'];
+        document.getElementById('txtPages').innerHTML = `Página ${data['page']} de ${totalPages}`
 
     })
     .catch(function(error) {
@@ -84,8 +90,11 @@ function showDetails(id) {
     let filmeAtual = moviesList[id]
   
     prevLayout = filme.innerHTML;
-    filme.innerHTML += `<p style="text-align: center; margin: 10px 5px; font-size: 20px">${filmeAtual['title']}</p>
-                        <p style="margin-bottom: 10px">Lançamento: ${dateFormat(filmeAtual['release_date'])}</p>`
+    filme.innerHTML += `<p style="text-align: center; margin: 10px 5px; font-size: 20px">${filmeAtual['title']}</p>`;
+
+    if(filmeAtual['release_date'] != ''){
+      filme.innerHTML += `<p style="margin-bottom: 10px">Lançamento: ${dateFormat(filmeAtual['release_date'])}</p>`
+    }
 
     if(filmeAtual['vote_average'] != 0){
       filme.innerHTML += `<p style="margin-bottom: 10px">Nota: ${filmeAtual['vote_average'].toFixed(1)}</p>`
