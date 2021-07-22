@@ -7,30 +7,38 @@
 
   <body>
 
-    <div id="header">
+    <header>
 
-      <a href="index.html" style="text-decoration: none;">
-        <img src="cinema.png">
-        <p>MovieDB</p>
-      </a>
-
-      <div id="search-menu">
-        <input type="text" placeholder="Pesquise um filme..." id="pesquisa">
-        <button id="search-btn"></button> 
+      <div class="container">
+        <a href="index.html" style="text-decoration: none;">
+          <img src="cinema.png">
+          <p>MovieDB</p>
+        </a>
+  
+        <div id="search-menu">
+          <input type="text" placeholder="Pesquise um filme..." id="pesquisa">
+          <button id="search-btn"></button> 
+        </div>
       </div>
     
-    </div>
+    </header>
 
-    <div id="page-selection">
-      <label for="pageNumber">Ir para a página:</label>
-      <input type="number" name="pageNumber" id="pageNumber" max="500" min="1" style="width: 60px;">
-      <button id="btn-page">Ir</button>
-    </div>
-      
-    <div id="container">
-      
+    <main>
+      <div class="container">
+        <div id="page-selection">
+          <label for="pageNumber" id="txtPages">Ir para a página:</label>
+          <input type="number" name="pageNumber" id="pageNumber" max="500" min="1" style="width: 60px;">
+          <button id="btn-page">Ir</button>
+        </div>
+          
+        <div id="container-movies">
+          <div id="movies">
 
-    </div> 
+          </div>
+        </div> 
+      </div>
+    </main>
+    
     
     <footer>2021 - Lávio Dias ®</footer>
     

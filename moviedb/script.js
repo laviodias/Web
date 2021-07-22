@@ -1,21 +1,29 @@
 let page = 1;
+let currentPage = 1;
 let prevLayout;
 let isClicked = false;
+let isSearching = false;
 let moviesList = Array();
 let pesquisa;
 
 const url = `https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=04c35731a5ee918f014970082a0088b1&page=`;
 const IMGPATH = "https://image.tmdb.org/t/p/w1280";
-const SEARCHAPI = "https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=";
+let SEARCHAPI = `https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=${pesquisa}&page=${currentPage}`;
 
-const mainDiv = document.getElementById("container");
+const mainDiv = document.getElementById("movies");
 
 document.getElementById("btn-page").addEventListener("click", () => {
-  page = document.getElementById("pageNumber").value;
-  if(page<1 || page>500){
-    window.alert("Digite um valor entre 1 e 500");
+  if(!isSearching){
+    page = document.getElementById("pageNumber").value;
+
+    if(page<1 || page>500)
+      window.alert("Digite um valor entre 1 e 500");
+    else
+      apiCall();
+
   }else{
-    apiCall();
+    currentPage = document.getElementById("pageNumber").value;
+    searchCall()
   }
 })
 
@@ -45,9 +53,12 @@ function apiCall(){
 apiCall();
 
 function searchCall(){
+  SEARCHAPI = `https://api.themoviedb.org/3/search/movie?&api_key=04c35731a5ee918f014970082a0088b1&query=${pesquisa}&page=${currentPage}`;  
+  isSearching = true;
+
   mainDiv.innerHTML = ''
   moviesList = []
-  fetch(SEARCHAPI+pesquisa)
+  fetch(SEARCHAPI)
     .then((resp) => resp.json())
     .then(function(data) {
         let results = data.results;
@@ -55,6 +66,10 @@ function searchCall(){
           moviesList[movie.id] = movie
           listMovies(movie)
         });
+        
+        let pages = data['total_pages'];
+        document.getElementById('txtPages').innerHTML = `Página ${data['page']} de ${pages}`
+
     })
     .catch(function(error) {
         console.log(error);
