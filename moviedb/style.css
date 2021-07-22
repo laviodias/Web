@@ -30,7 +30,7 @@ button {
 
 #search-btn {
     border: none;
-    background: url(search.png)  no-repeat center;
+    background: url(images/search.png)  no-repeat center;
     background-color: yellow;
 }
 
