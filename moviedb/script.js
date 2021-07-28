@@ -1,8 +1,7 @@
 let page = 1;
 let totalPages;
 let currentPage = 1;
-let prevLayout;
-let isClicked = false;
+let prevLayout = '';
 let isSearching = false;
 let moviesList = Array();
 let pesquisa;
@@ -82,39 +81,47 @@ function searchCall(){
     });
 }
 
-function showDetails(id) {
-  if(!isClicked){
-    let filme = document.getElementById(id);
-    filme.classList.add("extended");
+function showBack(id){
+  document.getElementById('card-'+id).classList.toggle('flip')
+  let div = document.getElementById('card-'+id);
+  console.log(prevLayout.innerHTML)
 
-    let filmeAtual = moviesList[id]
-  
-    prevLayout = filme.innerHTML;
-    filme.innerHTML += `<p style="text-align: center; margin: 10px 5px; font-size: 20px">${filmeAtual['title']}</p>`;
+  if(prevLayout == ''){
+    prevLayout = div.innerHTML;
+    console.log(prevLayout.innerHTML);
+    
+    div.innerHTML =
+    `
+    <div class="back" id="back-${id}">
+      <p style="margin: 10px 5px 15px 5px; font-size: 20px">${moviesList[id].title}</p>
+      <p style="margin-bottom: 10px; text-align:justify;" class="overview">Sinopse: ${moviesList[id].overview}</p>`
+    let teste = document.getElementById('back-'+id);
 
-    if(filmeAtual['release_date'] != ''){
-      filme.innerHTML += `<p style="margin-bottom: 10px">Lançamento: ${dateFormat(filmeAtual['release_date'])}</p>`
+    moviesList[id].release_date != '' ? teste.innerHTML += `
+      <p style="margin-bottom: 10px">Lançamento: ${dateFormat(moviesList[id].release_date)}</p>` : null;
+
+    if(moviesList[id].vote_average != 0){
+      teste.innerHTML += `<p style="margin-bottom: 10px">Nota: ${moviesList[id].vote_average.toFixed(1)}</p>`;
+      teste.innerHTML += `<p>Avaliações: ${moviesList[id].vote_count}</p>`;
     }
 
-    if(filmeAtual['vote_average'] != 0){
-      filme.innerHTML += `<p style="margin-bottom: 10px">Nota: ${filmeAtual['vote_average'].toFixed(1)}</p>`
-      filme.innerHTML += `<p>Avaliações: ${filmeAtual['vote_count']}</p>`
-    }
+    document.getElementById('back-'+id).style.backgroundColor = 'rgb(3, 9, 44)';
+    console.log(prevLayout.innerHTML)
+  }else{
+    console.log(prevLayout.innerHTML)
+    div.innerHTML = prevLayout
+    console.log(div)
+    prevLayout = ''
+  }
 
-    isClicked = true;
-  }  
 }
 
-function dismissDetails(id) {
-
-  isClicked = false;
-  
-  if(prevLayout != undefined){
-    document.getElementById(id).classList.remove("extended");
-    let filme = document.getElementById(id);
-    filme.innerHTML = prevLayout;
-    prevLayout = undefined
-  } 
+function showFront(id){
+  if(prevLayout != ''){
+    document.getElementById('card-'+id).innerHTML = prevLayout;
+    document.getElementById('card-'+id).classList.toggle('flip')
+    prevLayout = ''
+  }
 }
 
 function listMovies(movie) {
@@ -123,10 +130,14 @@ function listMovies(movie) {
     imgSource = 'http://www.protec.com.br/app/webroot/img/fonto-indisponivel.png'
   }
 
-  let div = `<div class="filme" id="${movie.id}" onmousedown="showDetails(${movie.id})" onmouseout="dismissDetails(${movie.id})">
-              <h3 class="title">${movie.title}</h3>
-              <img src='${imgSource}' height='300px' width='200px'>
-            </div>`;
+  let div = `
+            <div class="card" id="card-${movie.id}" onmousedown="showBack(${movie.id})" onmouseleave="showFront(${movie.id})">
+              <div class="filme front" id="${movie.id}">
+                <h3 class="title">${movie.title}</h3>
+                <img src='${imgSource}' height='300px' width='200px'>
+              </div>
+            </div>
+            `;
   
   mainDiv.innerHTML += div;
 }
